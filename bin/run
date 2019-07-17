@@ -36,32 +36,37 @@ done
 ###
 
 AW_PATH="$HOME/.vim-anywhere"
-VIM_OPTS=--nofork
-TMPFILE_DIR="/tmp/vim-anywhere"
-
-[ ! -d "$TMPFILE_DIR" ] && mkdir -p  "$TMPFILE_DIR"
-TMPFILE="$(mktemp -p "$TMPFILE_DIR")"
-
+VIM_OPTS="--wait --nvim --cur-env"
 # Use ~/.gvimrc.min or ~/.vimrc.min if one exists
 VIMRC_PATH=($HOME/.gvimrc.min $HOME/.vimrc.min)
 
 for vimrc_path in "${VIMRC_PATH[@]}"; do
-    if [ -f "$vimrc_path" ]; then
-        VIM_OPTS+=" -u $vimrc_path"
-        break
-    fi
+  if [ -f "$vimrc_path" ]; then
+    VIM_OPTS+=" -u $vimrc_path"
+    break
+  fi
 done
-
-chmod 0600 "$TMPFILE" # Make file only readable by you
 
 # Linux
 if [[ $OSTYPE == "linux-gnu" ]]; then
+  TMPFILE_DIR="/tmp/vim-anywhere"
+  mkdir -p "$TMPFILE_DIR"
+
+  TMPFILE="$(mktemp -p $TMPFILE_DIR)"
+  chmod 0600 "$TMPFILE" # Make file only readable by you
+
   xclip -selection clipboard -o > "$TMPFILE"
   gvim $VIM_OPTS "$TMPFILE"
   xclip -selection clipboard < "$TMPFILE"
 
 # OSX
-elif [[ $OSTYPE =~ [Dd]+arwin[.]* ]]; then
+elif [[ $OSTYPE =~ [Dd]arwin.* ]]; then
+  TMPFILE_DIR="$TMPDIR/vim-anywhere"
+  mkdir -p "$TMPFILE_DIR"
+
+  TMPFILE="$(mktemp -t vim-anywhere/doc)"
+  chmod 0600 "$TMPFILE" # Make file only readable by you
+
   # if there is no path file, it must have been deleted or the installer failed
   require_file_exists "$AW_PATH/.path" "Please reinstall vim-anywhere."
 
