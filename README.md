@@ -15,7 +15,7 @@ refocused.
 
 __OSX:__
 
-- MacVim (`brew install macvim`)
+- MacVim (`brew install --cask macvim`)
 
 __Linux:__
 
@@ -27,9 +27,6 @@ __Linux:__
 ```bash
 curl -fsSL https://raw.github.com/cknadler/vim-anywhere/master/install | bash
 ```
-
-__OSX caveat:__ key binding is unbound by default. See [keybinding](#keybinding)
-for details.
 
 #### Update
 
@@ -45,13 +42,13 @@ for details.
 
 ## Keybinding
 
-__OSX:__ ( default = unbound, suggested = `ctrl+cmd+v` )
+__OSX:__ ( default = `ctrl+cmd+v` )
 
-The keyboard shortcut for invoking vim-anywhere is unbound by default on OSX.
-The installation script will automatically open
-`System Preferences > Keyboard > Shortcuts`. Fill in the following:
+You can adjust the shortcut via [system preferences](assets/shortcut.png).
 
-![keyboard shortcut](assets/shortcut.png)
+```
+System Preferences > Keyboard > Shortcuts > Services > Vim Anywhere
+```
 
 __Linux:__ ( default = `ctrl+alt+v` )
 
@@ -63,15 +60,15 @@ $ gconftool -t str --set /desktop/gnome/keybindings/vim-anywhere/binding <custom
 *I3WM*
 
 ```bash
-$ echo "bindsym $mod+Alt+v exec ~/.vim-anywhere/bin/run" >> ~/.i3/config # remember to reload your config after
+$ echo 'bindsym $mod+Alt+v exec ~/.vim-anywhere/bin/run' >> ~/.i3/config # remember to reload your config after
 ```
 Adjust in case `$mod` is not set to ctrl.
 
 ## History
 
-vim-anywhere creates a temporary file in `/tmp/vim-anywhere` when
-invoked. These files stick around until you restart your system, giving you
-a temporary history.
+vim-anywhere creates a temporary file in `/tmp/vim-anywhere` when invoked. These
+files stick around until you restart your system, giving you a temporary
+history.
 
 View your history:
 
@@ -93,11 +90,16 @@ and paste it into whatever application I was just using. vim-anywhere attempts
 to automate this process as much as possible, reducing the friction of using
 Vim to do more than just edit code.
 
-## Contributing
+## Bugs
 
-Love vim-anywhere? Hate it? Want to change it completely? Email me or open an
-issue and lets talk. Pull requests, suggestions and issues of any kind are
-welcome with open arms.
+First, make sure to [read the FAQ](FAQ.md). If you don't find the answer you're
+looking for there, feel free to open an issue.
+
+## [Contributing](CONTRIBUTING.md)
+
+Pull requests, suggestions and issues of any kind are welcome. **Make sure
+to check out the [contribution guidelines](CONTRIBUTING.md) before you submit a
+pull request.**
 
 ## License
 

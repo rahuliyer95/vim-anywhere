@@ -110,9 +110,10 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   # manager. gsettings is the gnome client for dconf.
   else
     media_keys=org.gnome.settings-daemon.plugins.media-keys
-    custom_kbd=org.gnome.settings-daemon.plugins.media-keys.custom-keybindings
-    kbd_path=/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/vim-anywhere
-    gsettings set $media_keys custom-keybindings "['others', '$kbd_path']"
+    custom_kbd=org.gnome.settings-daemon.plugins.media-keys.custom-keybinding
+    kbd_path=/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/vim-anywhere/
+    new_bindings=`gsettings get $media_keys custom-keybindings | sed -e"s>'\]>','$kbd_path']>"| sed -e"s>@as \[\]>['$kbd_path']>"`
+    gsettings set $media_keys custom-keybindings "$new_bindings"
     gsettings set $custom_kbd:$kbd_path name $name
     gsettings set $custom_kbd:$kbd_path binding $binding
     gsettings set $custom_kbd:$kbd_path command $action
@@ -127,14 +128,18 @@ elif [[ $OSTYPE == "darwin"* ]]; then
   mkdir -p $HOME/Library/Services
   cp -R $AW_PATH/VimAnywhere.workflow $HOME/Library/Services
 
-  # TODO: add shortcut
-  # It would be great if there was a way to set the keyboard shortcut for
-  # vim-anywhere programatically (without GUI scripting). If there ends up being a
-  # way to do this, it would go here.
+  # Set default keybindings
+  defaults write pbs NSServicesStatus '{
+    "(null) - VimAnywhere - runWorkflowAsService" = {
+      "key_equivalent" = "@^v";
+    };
+    "org.vim.MacVim - MacVim/New MacVim Buffer With Selection - openSelection" = {
+      "key_equivalent" = "@^v";
+    };
+  }'
 
-  # As a partial workaround, run a script that opens the shortcut options
-  echo "Opening System Preferences..."
-  osascript $AW_PATH/script/open_shortcuts.scpt &> /dev/null
+  # Activating Finder causes the new keybindings to become active
+  osascript -e "activate application \"Finder\""
 fi
 
 echo "vim-anywhere has been successfully installed!"

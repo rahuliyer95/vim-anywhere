@@ -36,13 +36,13 @@ done
 ###
 
 AW_PATH="$HOME/.vim-anywhere"
-VIM_OPTS="--wait --nvim --cur-env"
+VIM_OPTS=("--wait" "--nvim" "--cur-env")
 # Use ~/.gvimrc.min or ~/.vimrc.min if one exists
-VIMRC_PATH=($HOME/.gvimrc.min $HOME/.vimrc.min)
+VIMRC_PATH=("$HOME/.gvimrc.min" "$HOME/.vimrc.min")
 
 for vimrc_path in "${VIMRC_PATH[@]}"; do
   if [ -f "$vimrc_path" ]; then
-    VIM_OPTS+=" -u $vimrc_path"
+    VIM_OPTS+=("-u" "$vimrc_path")
     break
   fi
 done
@@ -56,7 +56,7 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   chmod 0600 "$TMPFILE" # Make file only readable by you
 
   xclip -selection clipboard -o > "$TMPFILE"
-  gvim $VIM_OPTS "$TMPFILE"
+  gvim "${VIM_OPTS[@]}" "$TMPFILE"
   xclip -selection clipboard < "$TMPFILE"
 
 # OSX
@@ -78,7 +78,7 @@ elif [[ $OSTYPE =~ [Dd]arwin.* ]]; then
     "available in your path and then reinstall vim-anywhere."
 
   pbpaste > "$TMPFILE"
-  $mvim_path $VIM_OPTS "$TMPFILE"
+  "$mvim_path" "${VIM_OPTS[@]}" "$TMPFILE"
   # todo, fix invalid file
 
   # NOTE
